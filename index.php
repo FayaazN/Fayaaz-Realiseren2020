@@ -1,6 +1,7 @@
 <?php
 include 'connection.php';
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +34,7 @@ include 'connection.php';
 
             }
             ?>
-            <a href="#">Bekijk Programmaoverzicht</a>
+            <a href="/KKSoul.php">Bekijk Programmaoverzicht</a>
         </td>
         <td><?php
             foreach ($dbh->query('select * from zender where idzender=2') as $row) {
@@ -42,7 +43,7 @@ include 'connection.php';
 
             }
             ?>
-            <a href="#">Bekijk Programmaoverzicht</a>
+            <a href="/KKAlternative.php">Bekijk Programmaoverzicht</a>
         </td>
         <td><?php
             foreach ($dbh->query('select * from zender where idzender=3') as $row) {
@@ -51,7 +52,7 @@ include 'connection.php';
 
             }
             ?>
-            <a href="#">Bekijk Programmaoverzicht</a>
+            <a href="/KKHiphop.php">Bekijk Programmaoverzicht</a>
         </td>
     </tr>
     <tr>
@@ -62,7 +63,7 @@ include 'connection.php';
 
             }
             ?>
-            <a href="#">Bekijk Programmaoverzicht</a>
+            <a href="/KKRock.php">Bekijk Programmaoverzicht</a>
         </td>
         <td><?php
             foreach ($dbh->query('select * from zender where idzender=5') as $row) {
@@ -71,7 +72,7 @@ include 'connection.php';
 
             }
             ?>
-            <a href="#">Bekijk Programmaoverzicht</a>
+            <a href="/KKCountry.php">Bekijk Programmaoverzicht</a>
         </td>
         <td><?php
             foreach ($dbh->query('select * from zender where idzender=6') as $row) {
