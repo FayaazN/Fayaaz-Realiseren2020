@@ -1,0 +1,282 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema kraeken
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `kraeken` ;
+
+-- -----------------------------------------------------
+-- Schema kraeken
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `kraeken` DEFAULT CHARACTER SET utf8 ;
+USE `kraeken` ;
+
+-- -----------------------------------------------------
+-- Table `kraeken`.`artiest`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `kraeken`.`artiest` ;
+
+CREATE TABLE IF NOT EXISTS `kraeken`.`artiest` (
+  `idartiest` INT NOT NULL,
+  `artiestennaam` VARCHAR(45) NULL,
+  PRIMARY KEY (`idartiest`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kraeken`.`programma`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `kraeken`.`programma` ;
+
+CREATE TABLE IF NOT EXISTS `kraeken`.`programma` (
+  `idprogramma` INT NOT NULL,
+  `omschrijving` VARCHAR(45) NULL,
+  PRIMARY KEY (`idprogramma`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kraeken`.`song`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `kraeken`.`song` ;
+
+CREATE TABLE IF NOT EXISTS `kraeken`.`song` (
+  `idsong` INT NOT NULL,
+  `duur` VARCHAR(45) NULL,
+  `titel` VARCHAR(45) NULL,
+  PRIMARY KEY (`idsong`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kraeken`.`zender`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `kraeken`.`zender` ;
+
+CREATE TABLE IF NOT EXISTS `kraeken`.`zender` (
+  `idzender` INT NOT NULL,
+  `omschrijving` VARCHAR(45) NULL,
+  `slogan` VARCHAR(255) NULL,
+  PRIMARY KEY (`idzender`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kraeken`.`medewerker`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `kraeken`.`medewerker` ;
+
+CREATE TABLE IF NOT EXISTS `kraeken`.`medewerker` (
+  `idmedewerker` INT NOT NULL,
+  `voornaam` VARCHAR(45) NULL,
+  `tussenvoegsel` VARCHAR(45) NULL,
+  `achternaam` VARCHAR(45) NULL,
+  `login` VARCHAR(45) NULL,
+  `password` VARCHAR(255) NULL,
+  `nickname` VARCHAR(45) NULL,
+  PRIMARY KEY (`idmedewerker`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kraeken`.`uitzending`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `kraeken`.`uitzending` ;
+
+CREATE TABLE IF NOT EXISTS `kraeken`.`uitzending` (
+  `idprogramma` INT NOT NULL,
+  `datum` DATE NOT NULL,
+  `begintijd` TIME NOT NULL,
+  `eindtijd` TIME NULL,
+  `idzender` INT NOT NULL,
+  `presentator` INT NULL,
+  PRIMARY KEY (`idprogramma`, `datum`),
+  INDEX `fk_uitzending_zender_idx` (`idzender` ASC),
+  INDEX `fk_uitzending_medewerker1_idx` (`presentator` ASC),
+  INDEX `fk_uitzending_programma1_idx` (`idprogramma` ASC),
+  CONSTRAINT `fk_uitzending_zender`
+    FOREIGN KEY (`idzender`)
+    REFERENCES `kraeken`.`zender` (`idzender`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_uitzending_medewerker1`
+    FOREIGN KEY (`presentator`)
+    REFERENCES `kraeken`.`medewerker` (`idmedewerker`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_uitzending_programma1`
+    FOREIGN KEY (`idprogramma`)
+    REFERENCES `kraeken`.`programma` (`idprogramma`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kraeken`.`playlist`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `kraeken`.`playlist` ;
+
+CREATE TABLE IF NOT EXISTS `kraeken`.`playlist` (
+  `song_idsong` INT NOT NULL,
+  `programma_idprogramma` INT NOT NULL,
+  PRIMARY KEY (`song_idsong`, `programma_idprogramma`),
+  INDEX `fk_song_has_uitzending_uitzending1_idx` (`programma_idprogramma` ASC),
+  INDEX `fk_song_has_uitzending_song1_idx` (`song_idsong` ASC),
+  CONSTRAINT `fk_song_has_uitzending_song1`
+    FOREIGN KEY (`song_idsong`)
+    REFERENCES `kraeken`.`song` (`idsong`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_song_has_uitzending_uitzending1`
+    FOREIGN KEY (`programma_idprogramma`)
+    REFERENCES `kraeken`.`uitzending` (`idprogramma`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kraeken`.`song_has_artiest`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `kraeken`.`song_has_artiest` ;
+
+CREATE TABLE IF NOT EXISTS `kraeken`.`song_has_artiest` (
+  `song_idsong` INT NOT NULL,
+  `artiest_idartiest` INT NOT NULL,
+  PRIMARY KEY (`song_idsong`, `artiest_idartiest`),
+  INDEX `fk_song_has_artiest_artiest1_idx` (`artiest_idartiest` ASC),
+  INDEX `fk_song_has_artiest_song1_idx` (`song_idsong` ASC),
+  CONSTRAINT `fk_song_has_artiest_song1`
+    FOREIGN KEY (`song_idsong`)
+    REFERENCES `kraeken`.`song` (`idsong`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_song_has_artiest_artiest1`
+    FOREIGN KEY (`artiest_idartiest`)
+    REFERENCES `kraeken`.`artiest` (`idartiest`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `kraeken`.`artiest`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `kraeken`;
+INSERT INTO `kraeken`.`artiest` (`idartiest`, `artiestennaam`) VALUES (1, 'Jan');
+INSERT INTO `kraeken`.`artiest` (`idartiest`, `artiestennaam`) VALUES (2, 'Dirk');
+INSERT INTO `kraeken`.`artiest` (`idartiest`, `artiestennaam`) VALUES (3, 'Henk');
+INSERT INTO `kraeken`.`artiest` (`idartiest`, `artiestennaam`) VALUES (4, 'Piet');
+INSERT INTO `kraeken`.`artiest` (`idartiest`, `artiestennaam`) VALUES (5, 'Mark');
+INSERT INTO `kraeken`.`artiest` (`idartiest`, `artiestennaam`) VALUES (DEFAULT, '');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `kraeken`.`programma`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `kraeken`;
+INSERT INTO `kraeken`.`programma` (`idprogramma`, `omschrijving`) VALUES (1, 'Rock and Roll');
+INSERT INTO `kraeken`.`programma` (`idprogramma`, `omschrijving`) VALUES (2, 'Lazy Tunes');
+INSERT INTO `kraeken`.`programma` (`idprogramma`, `omschrijving`) VALUES (3, 'Quick Vibe');
+INSERT INTO `kraeken`.`programma` (`idprogramma`, `omschrijving`) VALUES (4, 'Sport Music');
+INSERT INTO `kraeken`.`programma` (`idprogramma`, `omschrijving`) VALUES (5, 'Driving Mood');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `kraeken`.`song`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `kraeken`;
+INSERT INTO `kraeken`.`song` (`idsong`, `duur`, `titel`) VALUES (1, '2.15', 'De bomen waaien');
+INSERT INTO `kraeken`.`song` (`idsong`, `duur`, `titel`) VALUES (2, '1.21', 'Vliegende vogels');
+INSERT INTO `kraeken`.`song` (`idsong`, `duur`, `titel`) VALUES (3, '2.12', 'Zwemvis');
+INSERT INTO `kraeken`.`song` (`idsong`, `duur`, `titel`) VALUES (4, '3.12', 'Dol-Fijn');
+INSERT INTO `kraeken`.`song` (`idsong`, `duur`, `titel`) VALUES (5, '3.21', 'Bijennest');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `kraeken`.`zender`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `kraeken`;
+INSERT INTO `kraeken`.`zender` (`idzender`, `omschrijving`, `slogan`) VALUES (1, 'KKSoul ', 'Soulmusic from the seventies');
+INSERT INTO `kraeken`.`zender` (`idzender`, `omschrijving`, `slogan`) VALUES (2, 'KKAlternative', 'Get strange');
+INSERT INTO `kraeken`.`zender` (`idzender`, `omschrijving`, `slogan`) VALUES (3, 'KKHiphop', 'And you don\'t stop rockin till the bang bang boogie');
+INSERT INTO `kraeken`.`zender` (`idzender`, `omschrijving`, `slogan`) VALUES (4, 'KKRock', 'Rock en Metal');
+INSERT INTO `kraeken`.`zender` (`idzender`, `omschrijving`, `slogan`) VALUES (5, 'KKCountry', 'All your country & western favorites');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `kraeken`.`medewerker`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `kraeken`;
+INSERT INTO `kraeken`.`medewerker` (`idmedewerker`, `voornaam`, `tussenvoegsel`, `achternaam`, `login`, `password`, `nickname`) VALUES (1, 'Harm', NULL, 'Ertegen', 'hertegen', 'ertegenh', 'Harm E');
+INSERT INTO `kraeken`.`medewerker` (`idmedewerker`, `voornaam`, `tussenvoegsel`, `achternaam`, `login`, `password`, `nickname`) VALUES (2, 'Don', NULL, 'Vis', 'dvis', 'visd', 'Don V');
+INSERT INTO `kraeken`.`medewerker` (`idmedewerker`, `voornaam`, `tussenvoegsel`, `achternaam`, `login`, `password`, `nickname`) VALUES (3, 'Enzo', 'op', 'Dam', 'edam', 'dame', 'Enzo D');
+INSERT INTO `kraeken`.`medewerker` (`idmedewerker`, `voornaam`, `tussenvoegsel`, `achternaam`, `login`, `password`, `nickname`) VALUES (4, 'Mike', NULL, 'Beemer', 'mbeemer', 'beemerm', 'Mike B');
+INSERT INTO `kraeken`.`medewerker` (`idmedewerker`, `voornaam`, `tussenvoegsel`, `achternaam`, `login`, `password`, `nickname`) VALUES (5, 'Ser', 'de', 'Haas', 'shaas', 'haass', 'Ser H');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `kraeken`.`uitzending`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `kraeken`;
+INSERT INTO `kraeken`.`uitzending` (`idprogramma`, `datum`, `begintijd`, `eindtijd`, `idzender`, `presentator`) VALUES (1, '17-03-2020', '09:10', '15:00', 1, 1);
+INSERT INTO `kraeken`.`uitzending` (`idprogramma`, `datum`, `begintijd`, `eindtijd`, `idzender`, `presentator`) VALUES (2, '18-03-2020', '09:10', '15:00', 2, 2);
+INSERT INTO `kraeken`.`uitzending` (`idprogramma`, `datum`, `begintijd`, `eindtijd`, `idzender`, `presentator`) VALUES (3, '19-03-2020', '09:10', '15:00', 3, 3);
+INSERT INTO `kraeken`.`uitzending` (`idprogramma`, `datum`, `begintijd`, `eindtijd`, `idzender`, `presentator`) VALUES (4, '20-03-2020', '09:10', '15:00', 4, 4);
+INSERT INTO `kraeken`.`uitzending` (`idprogramma`, `datum`, `begintijd`, `eindtijd`, `idzender`, `presentator`) VALUES (5, '21-03-2020', '09:10', '15:00', 5, 5);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `kraeken`.`playlist`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `kraeken`;
+INSERT INTO `kraeken`.`playlist` (`song_idsong`, `programma_idprogramma`) VALUES (1, 1);
+INSERT INTO `kraeken`.`playlist` (`song_idsong`, `programma_idprogramma`) VALUES (2, 2);
+INSERT INTO `kraeken`.`playlist` (`song_idsong`, `programma_idprogramma`) VALUES (3, 3);
+INSERT INTO `kraeken`.`playlist` (`song_idsong`, `programma_idprogramma`) VALUES (4, 4);
+INSERT INTO `kraeken`.`playlist` (`song_idsong`, `programma_idprogramma`) VALUES (5, 5);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `kraeken`.`song_has_artiest`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `kraeken`;
+INSERT INTO `kraeken`.`song_has_artiest` (`song_idsong`, `artiest_idartiest`) VALUES (1, 1);
+INSERT INTO `kraeken`.`song_has_artiest` (`song_idsong`, `artiest_idartiest`) VALUES (2, 2);
+INSERT INTO `kraeken`.`song_has_artiest` (`song_idsong`, `artiest_idartiest`) VALUES (3, 3);
+INSERT INTO `kraeken`.`song_has_artiest` (`song_idsong`, `artiest_idartiest`) VALUES (4, 4);
+INSERT INTO `kraeken`.`song_has_artiest` (`song_idsong`, `artiest_idartiest`) VALUES (5, 5);
+
+COMMIT;
+
