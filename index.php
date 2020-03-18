@@ -2,6 +2,7 @@
 include 'connection.php';
 
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +15,7 @@ include 'connection.php';
 <div class="header">
     <h3>
         <a href="index.php" class="menubar">Home</a>
-        <a href="contact.html" class="menubar">Contact</a>
+        <a href="nummers.php" class="menubar">Nummers</a>
         <a href="zenderoverzicht.php" class="menubar">Zenders</a>
     </h3>
 </div>
@@ -90,3 +91,4 @@ include 'connection.php';
 
 </body>
 </html>
+

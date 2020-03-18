@@ -13,7 +13,7 @@ include 'connection.php';
 <div class="header">
     <h3>
         <a href="index.php" class="menubar">Home</a>
-        <a href="nummers.php" class="menubar">Nummers</a>
+        <a href="#" class="menubar">Contact</a>
         <a href="zenderoverzicht.php" class="menubar">Zenders</a>
     </h3>
 </div>
@@ -52,10 +52,9 @@ include 'connection.php';
     </tr>
     <tr>
         <td><?php
-            foreach ($dbh->query('select * from zender where idzender=4') as $row) {
-                print $row['omschrijving'].'<br>';
-                print $row['slogan'] . '<br>';
-
+            foreach ($dbh->query('select * from song join artiest') as $row) {
+                print $row['duur'].'<br>';
+                print $row['titel'] . '<br>';
             }
             ?>
             <a href="KKRock.php">Bekijk Programmaoverzicht</a>
